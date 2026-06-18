@@ -3,6 +3,52 @@
 #
 # Application Kconfig entry point. Browse with `west build -t menuconfig`.
 
+choice ZVIEW_BENCH_MODE
+	prompt "ZView bench workload mode"
+	default ZVIEW_BENCH_MODE_DYNAMIC
+	help
+	  Selects the workload compiled into the binary. Each mode is its own
+	  ELF so the steady-state binary carries no dynamic-mode scaffolding.
+
+config ZVIEW_BENCH_MODE_STEADY
+	bool "Steady-state metronome (deviation baseline)"
+	help
+	  A single memory-bandwidth-bound thread on an absolute-deadline period,
+	  instrumented with a cycle counter and an optional GPIO edge. The
+	  stationary target for measuring a probe's timing perturbation.
+
+config ZVIEW_BENCH_MODE_DYNAMIC
+	bool "Dynamic all-paths workload"
+	help
+	  Threads that continuously move the state ZView observes: heap
+	  fragmentation, CPU load, and a deep stack watermark.
+
+endchoice
+
+config ZVIEW_BENCH_PERIOD_MS
+	int "Steady-state period (ms)"
+	depends on ZVIEW_BENCH_MODE_STEADY
+	default 5
+	help
+	  Absolute-deadline period of the metronome thread.
+
+config ZVIEW_BENCH_STREAM_WORDS
+	int "Steady-state working-set size (32-bit words)"
+	depends on ZVIEW_BENCH_MODE_STEADY
+	default 8192
+	help
+	  Size of the streamed buffer. Keep it larger than the data cache so
+	  each pass forces main-memory traffic; 8192 words is 32 KiB, twice the
+	  Cortex-M7 16 KiB D-cache.
+
+config ZVIEW_BENCH_STREAM_PASSES
+	int "Steady-state sweeps per period"
+	depends on ZVIEW_BENCH_MODE_STEADY
+	default 4
+	help
+	  Number of full read-modify-write sweeps over the working set per
+	  period. Sets the deterministic work-window length.
+
 menu "Zephyr"
 source "Kconfig.zephyr"
 endmenu

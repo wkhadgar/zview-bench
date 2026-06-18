@@ -1,0 +1,21 @@
+/*
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * bench_toggle drives an external probe point for a logic analyzer / scope,
+ * giving a target-independent reference for the steady-state period. PB8 is
+ * Arduino D15 on the Nucleo-144 header.
+ */
+
+/ {
+	bench {
+		compatible = "gpio-leds";
+		bench_toggle: bench_toggle {
+			gpios = <&gpiob 8 GPIO_ACTIVE_HIGH>;
+		};
+	};
+
+	aliases {
+		bench-toggle = &bench_toggle;
+	};
+};

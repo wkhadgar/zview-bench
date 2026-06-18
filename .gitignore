@@ -1,0 +1,20 @@
+# editors
+.vscode
+*.swp
+*~
+
+# python
+.venv
+
+# west workspace (zephyr + modules are fetched, not vendored)
+/zephyr
+/modules
+/bootloader
+/tools
+/.west
+
+# build
+/build*
+/twister-out*
+
+__pycache__/

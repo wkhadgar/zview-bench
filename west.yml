@@ -1,0 +1,17 @@
+# Copyright (c) 2026 Paulo Santos (@wkhadgar)
+# SPDX-License-Identifier: Apache-2.0
+
+manifest:
+  remotes:
+    - name: zephyrproject-rtos
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject-rtos
+      revision: main
+      import:
+        # name-allowlist clones only the modules this app's boards need.
+        name-allowlist:
+          - cmsis_6   # ARM Cortex-M port
+          - hal_stm32 # nucleo_h753zi (STM32H7)

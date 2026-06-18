@@ -1,0 +1,9 @@
+sample:
+  name: zview-bench
+  description: Reference Zephyr target for exercising and benchmarking ZView
+common:
+  build_only: true
+  integration_platforms:
+    - nucleo_h753zi
+tests:
+  app.default: {}

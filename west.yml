@@ -5,6 +5,8 @@ manifest:
   remotes:
     - name: zephyrproject-rtos
       url-base: https://github.com/zephyrproject-rtos
+    - name: wkhadgar
+      url-base: https://github.com/wkhadgar
 
   projects:
     - name: zephyr
@@ -15,3 +17,10 @@ manifest:
         name-allowlist:
           - cmsis_6   # ARM Cortex-M port
           - hal_stm32 # nucleo_h753zi (STM32H7)
+
+    # ZView itself, so `west zview ...` works from this workspace.
+    - name: zview
+      remote: wkhadgar
+      revision: main
+      path: modules/tools/zview
+      west-commands: scripts/west-commands.yml

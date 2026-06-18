@@ -5,16 +5,8 @@
 
 # python
 .venv
-
-# west workspace (zephyr + modules are fetched, not vendored)
-/zephyr
-/modules
-/bootloader
-/tools
-/.west
+__pycache__/
 
 # build
 /build*
 /twister-out*
-
-__pycache__/

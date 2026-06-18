@@ -1,0 +1,2 @@
+# Lint/format config for the host-side tooling under tools/.
+line-length = 100

@@ -21,8 +21,9 @@ config ZVIEW_BENCH_MODE_DYNAMIC
 	bool "Dynamic all-paths workload"
 	help
 	  Threads that continuously move the state ZView observes: heap
-	  fragmentation, CPU load, a deep stack watermark, a contended mutex,
-	  and a semaphore whose count sweeps from zero to its limit.
+	  fragmentation, CPU load, a deep stack watermark, a contended mutex, a
+	  semaphore whose count sweeps its range, and a gate semaphore with
+	  threads parked on its wait queue.
 
 endchoice
 

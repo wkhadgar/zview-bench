@@ -230,6 +230,8 @@ K_THREAD_DEFINE(load_id, LOAD_STACK, load_thread, NULL, NULL, NULL, WORKER_PRIO,
 K_MUTEX_DEFINE(bench_lock);
 K_SEM_DEFINE(bench_slots, 0, SEM_LIMIT);
 
+K_SEM_DEFINE(bench_gate, 0, 1);
+
 #define SYNC_STACK    768
 #define SYNC_PRIO     7
 
@@ -238,6 +240,7 @@ K_SEM_DEFINE(bench_slots, 0, SEM_LIMIT);
 
 #define SEM_GIVE_MS   120
 #define SEM_DRAIN_MS  1200
+#define GATE_OPEN_MS  900
 
 static void lock_owner_thread(void *p1, void *p2, void *p3)
 {
@@ -303,7 +306,39 @@ K_THREAD_DEFINE(lock_waiter_id, SYNC_STACK, lock_waiter_thread, NULL, NULL, NULL
 K_THREAD_DEFINE(sem_giver_id, SYNC_STACK, sem_giver_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
+static void gate_keeper_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_msleep(GATE_OPEN_MS);
+		k_sem_give(&bench_gate);
+	}
+}
+
+static void gate_waiter_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_sem_take(&bench_gate, K_FOREVER);
+	}
+}
+
 K_THREAD_DEFINE(sem_burst_id, SYNC_STACK, sem_burst_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(gate_keeper_id, SYNC_STACK, gate_keeper_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(gate_waiter_a_id, SYNC_STACK, gate_waiter_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(gate_waiter_b_id, SYNC_STACK, gate_waiter_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
 #endif /* CONFIG_ZVIEW_BENCH_MODE_DYNAMIC */

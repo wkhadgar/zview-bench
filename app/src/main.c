@@ -235,12 +235,13 @@ K_SEM_DEFINE(bench_gate, 0, 1);
 #define SYNC_STACK    768
 #define SYNC_PRIO     7
 
-#define LOCK_HOLD_MS  150
-#define LOCK_IDLE_MS  250
+#define LOCK_HOLD_MS  600
+#define LOCK_IDLE_MS  900
+#define LOCK_WAIT_MS  1100
 
-#define SEM_GIVE_MS   120
-#define SEM_DRAIN_MS  1200
-#define GATE_OPEN_MS  900
+#define SEM_GIVE_MS   500
+#define SEM_DRAIN_MS  3500
+#define GATE_OPEN_MS  2500
 
 static void lock_owner_thread(void *p1, void *p2, void *p3)
 {
@@ -256,7 +257,7 @@ static void lock_owner_thread(void *p1, void *p2, void *p3)
 	}
 }
 
-/* Blocks behind the owner for as long as the lock is held. */
+/* Its period is not a multiple of the owner's, so it drifts across the hold. */
 static void lock_waiter_thread(void *p1, void *p2, void *p3)
 {
 	ARG_UNUSED(p1);
@@ -266,7 +267,7 @@ static void lock_waiter_thread(void *p1, void *p2, void *p3)
 	while (1) {
 		k_mutex_lock(&bench_lock, K_FOREVER);
 		k_mutex_unlock(&bench_lock);
-		k_msleep(LOCK_HOLD_MS / 2);
+		k_msleep(LOCK_WAIT_MS);
 	}
 }
 

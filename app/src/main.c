@@ -186,7 +186,7 @@ K_THREAD_DEFINE(frag_id, FRAG_STACK, frag_thread, NULL, NULL, NULL, WORKER_PRIO,
 #define TARGET_LOAD_PERCENT 25
 #define LOAD_PERIOD_MS      100
 
-/* Push the watermark deep once so the thread shows a non-trivial stack usage. */
+/* One frame per level. The buffer is read after the call, so it is not reused. */
 static void force_stack_watermark(int depth)
 {
 	volatile char bloat[128];
@@ -195,6 +195,8 @@ static void force_stack_watermark(int depth)
 	if (depth > 0) {
 		force_stack_watermark(depth - 1);
 	}
+
+	(void)bloat[0];
 }
 
 /* Fixed duty cycle so ZView reports a stable, non-zero CPU load. */
@@ -204,7 +206,7 @@ static void load_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
 
-	force_stack_watermark(3);
+	force_stack_watermark(2);
 
 	const uint32_t busy_us = (LOAD_PERIOD_MS * 1000U * TARGET_LOAD_PERCENT) / 100U;
 	const uint32_t sleep_ms = LOAD_PERIOD_MS - (LOAD_PERIOD_MS * TARGET_LOAD_PERCENT / 100U);
@@ -249,6 +251,8 @@ static void lock_owner_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
 
+	force_stack_watermark(1);
+
 	while (1) {
 		k_mutex_lock(&bench_lock, K_FOREVER);
 		k_msleep(LOCK_HOLD_MS);
@@ -263,6 +267,8 @@ static void lock_waiter_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p1);
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
+
+	force_stack_watermark(2);
 
 	while (1) {
 		k_mutex_lock(&bench_lock, K_FOREVER);
@@ -289,6 +295,8 @@ static void sem_burst_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
 
+	force_stack_watermark(1);
+
 	while (1) {
 		k_msleep(SEM_DRAIN_MS);
 
@@ -312,6 +320,8 @@ static void gate_keeper_thread(void *p1, void *p2, void *p3)
 	ARG_UNUSED(p1);
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
+
+	force_stack_watermark(2);
 
 	while (1) {
 		k_msleep(GATE_OPEN_MS);

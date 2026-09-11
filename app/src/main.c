@@ -227,16 +227,12 @@ K_THREAD_DEFINE(load_id, LOAD_STACK, load_thread, NULL, NULL, NULL, WORKER_PRIO,
 		BENCH_START_DELAY_MS);
 
 /* Synchronization objects. Static, so each one carries a symbol. */
-
-/*
- * Statically defined, so both objects carry a symbol a host can resolve. The
- * lock is held, and the semaphore count held at each level, for longer than a
- * typical polling period.
- */
-#define SEM_LIMIT 4
+#define SEM_LIMIT      4
+#define MSGQ_CAPACITY  8
 
 K_MUTEX_DEFINE(bench_lock);
 K_SEM_DEFINE(bench_slots, 0, SEM_LIMIT);
+K_MSGQ_DEFINE(bench_q, sizeof(uint32_t), MSGQ_CAPACITY, 4);
 
 K_SEM_DEFINE(bench_gate, 0, 1);
 
@@ -249,6 +245,9 @@ K_SEM_DEFINE(bench_gate, 0, 1);
 
 #define SEM_GIVE_MS   500
 #define SEM_DRAIN_MS  3500
+
+#define MSGQ_PUT_MS   500
+#define MSGQ_DRAIN_MS 5000
 #define GATE_OPEN_MS  2500
 
 static void lock_owner_thread(void *p1, void *p2, void *p3)
@@ -356,6 +355,47 @@ K_THREAD_DEFINE(gate_waiter_a_id, SYNC_STACK, gate_waiter_thread, NULL, NULL, NU
 		BENCH_START_DELAY_MS);
 
 K_THREAD_DEFINE(gate_waiter_b_id, SYNC_STACK, gate_waiter_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+static void msgq_tx_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	uint32_t seq = 0;
+
+	force_stack_watermark(1);
+
+	while (1) {
+		(void)k_msgq_put(&bench_q, &seq, K_FOREVER);
+		seq++;
+		k_msleep(MSGQ_PUT_MS);
+	}
+}
+
+static void msgq_rx_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	uint32_t msg;
+
+	force_stack_watermark(2);
+
+	while (1) {
+		k_msleep(MSGQ_DRAIN_MS);
+
+		for (int taken = 0; taken <= MSGQ_CAPACITY; taken++) {
+			(void)k_msgq_get(&bench_q, &msg, K_FOREVER);
+		}
+	}
+}
+
+K_THREAD_DEFINE(msgq_tx_id, SYNC_STACK, msgq_tx_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+K_THREAD_DEFINE(msgq_rx_id, SYNC_STACK, msgq_rx_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
 #endif /* CONFIG_ZVIEW_BENCH_MODE_DYNAMIC */

@@ -222,19 +222,22 @@ K_THREAD_DEFINE(load_id, LOAD_STACK, load_thread, NULL, NULL, NULL, WORKER_PRIO,
 
 /*
  * Statically defined, so both objects carry a symbol a host can resolve. The
- * lock is held, and the semaphore left drained, for longer than a typical
- * polling period.
+ * lock is held, and the semaphore count held at each level, for longer than a
+ * typical polling period.
  */
+#define SEM_LIMIT 4
+
 K_MUTEX_DEFINE(bench_lock);
-K_SEM_DEFINE(bench_slots, 0, 4);
+K_SEM_DEFINE(bench_slots, 0, SEM_LIMIT);
 
-#define SYNC_STACK   768
-#define SYNC_PRIO    7
+#define SYNC_STACK    768
+#define SYNC_PRIO     7
 
-#define LOCK_HOLD_MS 150
-#define LOCK_IDLE_MS 250
-#define SEM_GIVE_MS  250
-#define SEM_WORK_MS  50
+#define LOCK_HOLD_MS  150
+#define LOCK_IDLE_MS  250
+
+#define SEM_GIVE_MS   120
+#define SEM_DRAIN_MS  1200
 
 static void lock_owner_thread(void *p1, void *p2, void *p3)
 {
@@ -276,16 +279,18 @@ static void sem_giver_thread(void *p1, void *p2, void *p3)
 	}
 }
 
-/* Two of these run against one giver, leaving the semaphore drained. */
-static void sem_taker_thread(void *p1, void *p2, void *p3)
+static void sem_burst_thread(void *p1, void *p2, void *p3)
 {
 	ARG_UNUSED(p1);
 	ARG_UNUSED(p2);
 	ARG_UNUSED(p3);
 
 	while (1) {
-		k_sem_take(&bench_slots, K_FOREVER);
-		k_msleep(SEM_WORK_MS);
+		k_msleep(SEM_DRAIN_MS);
+
+		for (int taken = 0; taken < SEM_LIMIT + 1; taken++) {
+			k_sem_take(&bench_slots, K_FOREVER);
+		}
 	}
 }
 
@@ -298,10 +303,7 @@ K_THREAD_DEFINE(lock_waiter_id, SYNC_STACK, lock_waiter_thread, NULL, NULL, NULL
 K_THREAD_DEFINE(sem_giver_id, SYNC_STACK, sem_giver_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
-K_THREAD_DEFINE(sem_taker_a_id, SYNC_STACK, sem_taker_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
-		BENCH_START_DELAY_MS);
-
-K_THREAD_DEFINE(sem_taker_b_id, SYNC_STACK, sem_taker_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+K_THREAD_DEFINE(sem_burst_id, SYNC_STACK, sem_burst_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
 #endif /* CONFIG_ZVIEW_BENCH_MODE_DYNAMIC */

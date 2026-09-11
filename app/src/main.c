@@ -183,7 +183,6 @@ static void frag_thread(void *p1, void *p2, void *p3)
 K_THREAD_DEFINE(frag_id, FRAG_STACK, frag_thread, NULL, NULL, NULL, WORKER_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
-#define TARGET_LOAD_PERCENT 25
 #define LOAD_PERIOD_MS      100
 
 /* One frame per level. The buffer is read after the call, so it is not reused. */
@@ -199,7 +198,9 @@ static void force_stack_watermark(int depth)
 	(void)bloat[0];
 }
 
-/* Fixed duty cycle so ZView reports a stable, non-zero CPU load. */
+static const uint8_t load_steps[] = {10, 35, 70, 35};
+#define LOAD_STEP_MS 2000
+
 static void load_thread(void *p1, void *p2, void *p3)
 {
 	ARG_UNUSED(p1);
@@ -208,12 +209,17 @@ static void load_thread(void *p1, void *p2, void *p3)
 
 	force_stack_watermark(2);
 
-	const uint32_t busy_us = (LOAD_PERIOD_MS * 1000U * TARGET_LOAD_PERCENT) / 100U;
-	const uint32_t sleep_ms = LOAD_PERIOD_MS - (LOAD_PERIOD_MS * TARGET_LOAD_PERCENT / 100U);
-
 	while (1) {
-		k_busy_wait(busy_us);
-		k_msleep(sleep_ms);
+		for (size_t step = 0; step < ARRAY_SIZE(load_steps); step++) {
+			const uint32_t percent = load_steps[step];
+			const uint32_t busy_us = (LOAD_PERIOD_MS * 1000U * percent) / 100U;
+			const uint32_t sleep_ms = LOAD_PERIOD_MS - (LOAD_PERIOD_MS * percent / 100U);
+
+			for (uint32_t held = 0; held < LOAD_STEP_MS; held += LOAD_PERIOD_MS) {
+				k_busy_wait(busy_us);
+				k_msleep(sleep_ms);
+			}
+		}
 	}
 }
 

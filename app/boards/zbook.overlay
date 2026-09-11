@@ -1,0 +1,14 @@
+/*
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * bench_toggle drives an external probe point for a logic analyzer / scope.
+ * The zbook breaks out no spare header pin, so the red LED is reused. It is
+ * active low, so the edge polarity is inverted.
+ */
+
+/ {
+	aliases {
+		bench-toggle = &red_led;
+	};
+};

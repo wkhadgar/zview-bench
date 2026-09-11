@@ -227,12 +227,15 @@ K_THREAD_DEFINE(load_id, LOAD_STACK, load_thread, NULL, NULL, NULL, WORKER_PRIO,
 		BENCH_START_DELAY_MS);
 
 /* Synchronization objects. Static, so each one carries a symbol. */
-#define SEM_LIMIT      4
-#define MSGQ_CAPACITY  8
+#define SEM_LIMIT       4
+#define MSGQ_CAPACITY   8
+#define SLAB_BLOCKS     8
+#define SLAB_BLOCK_SIZE 64
 
 K_MUTEX_DEFINE(bench_lock);
 K_SEM_DEFINE(bench_slots, 0, SEM_LIMIT);
 K_MSGQ_DEFINE(bench_q, sizeof(uint32_t), MSGQ_CAPACITY, 4);
+K_MEM_SLAB_DEFINE(bench_slab, SLAB_BLOCK_SIZE, SLAB_BLOCKS, 4);
 
 K_SEM_DEFINE(bench_gate, 0, 1);
 
@@ -248,6 +251,10 @@ K_SEM_DEFINE(bench_gate, 0, 1);
 
 #define MSGQ_PUT_MS   500
 #define MSGQ_DRAIN_MS 5000
+
+#define SLAB_STEP_MS  400
+#define SLAB_HOLD_MS  300
+#define SLAB_FREE_MS  2500
 #define GATE_OPEN_MS  2500
 
 static void lock_owner_thread(void *p1, void *p2, void *p3)
@@ -396,6 +403,40 @@ static void msgq_rx_thread(void *p1, void *p2, void *p3)
 K_THREAD_DEFINE(msgq_tx_id, SYNC_STACK, msgq_tx_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 K_THREAD_DEFINE(msgq_rx_id, SYNC_STACK, msgq_rx_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+static void slab_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	void *blocks[SLAB_BLOCKS] = {0};
+
+	force_stack_watermark(1);
+
+	while (1) {
+		for (int i = 0; i < SLAB_BLOCKS; i++) {
+			if (k_mem_slab_alloc(&bench_slab, &blocks[i], K_FOREVER) != 0) {
+				blocks[i] = NULL;
+			}
+			k_msleep(SLAB_STEP_MS);
+		}
+
+		k_msleep(SLAB_HOLD_MS);
+
+		for (int i = 0; i < SLAB_BLOCKS; i++) {
+			if (blocks[i] != NULL) {
+				k_mem_slab_free(&bench_slab, blocks[i]);
+				blocks[i] = NULL;
+			}
+		}
+
+		k_msleep(SLAB_FREE_MS);
+	}
+}
+
+K_THREAD_DEFINE(slab_id, SYNC_STACK, slab_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
 #endif /* CONFIG_ZVIEW_BENCH_MODE_DYNAMIC */

@@ -4,12 +4,10 @@
  * Copyright (c) 2026 Paulo Santos (@wkhadgar)
  * SPDX-License-Identifier: Apache-2.0
  *
- * Two build-time modes (choice ZVIEW_BENCH_MODE):
- *   STEADY  - one memory-bandwidth-bound metronome thread on an absolute-deadline
- *             period, instrumented with a portable cycle counter and an optional
- *             GPIO edge, for measuring a debug probe's timing perturbation.
- *   DYNAMIC - threads that continuously move the state ZView observes (heap
- *             fragmentation, CPU load, a deep stack watermark) for path coverage.
+ * ZVIEW_BENCH_MODE picks one of two workloads:
+ *   STEADY  - a metronome thread on an absolute deadline, for measuring a
+ *             probe's timing perturbation.
+ *   DYNAMIC - threads that keep every object ZView reads in motion.
  */
 
 #include <string.h>
@@ -218,6 +216,92 @@ static void load_thread(void *p1, void *p2, void *p3)
 }
 
 K_THREAD_DEFINE(load_id, LOAD_STACK, load_thread, NULL, NULL, NULL, WORKER_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+/* Synchronization objects. Static, so each one carries a symbol. */
+
+/*
+ * Statically defined, so both objects carry a symbol a host can resolve. The
+ * lock is held, and the semaphore left drained, for longer than a typical
+ * polling period.
+ */
+K_MUTEX_DEFINE(bench_lock);
+K_SEM_DEFINE(bench_slots, 0, 4);
+
+#define SYNC_STACK   768
+#define SYNC_PRIO    7
+
+#define LOCK_HOLD_MS 150
+#define LOCK_IDLE_MS 250
+#define SEM_GIVE_MS  250
+#define SEM_WORK_MS  50
+
+static void lock_owner_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_mutex_lock(&bench_lock, K_FOREVER);
+		k_msleep(LOCK_HOLD_MS);
+		k_mutex_unlock(&bench_lock);
+		k_msleep(LOCK_IDLE_MS);
+	}
+}
+
+/* Blocks behind the owner for as long as the lock is held. */
+static void lock_waiter_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_mutex_lock(&bench_lock, K_FOREVER);
+		k_mutex_unlock(&bench_lock);
+		k_msleep(LOCK_HOLD_MS / 2);
+	}
+}
+
+static void sem_giver_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_sem_give(&bench_slots);
+		k_msleep(SEM_GIVE_MS);
+	}
+}
+
+/* Two of these run against one giver, leaving the semaphore drained. */
+static void sem_taker_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		k_sem_take(&bench_slots, K_FOREVER);
+		k_msleep(SEM_WORK_MS);
+	}
+}
+
+K_THREAD_DEFINE(lock_owner_id, SYNC_STACK, lock_owner_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(lock_waiter_id, SYNC_STACK, lock_waiter_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(sem_giver_id, SYNC_STACK, sem_giver_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(sem_taker_a_id, SYNC_STACK, sem_taker_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
+		BENCH_START_DELAY_MS);
+
+K_THREAD_DEFINE(sem_taker_b_id, SYNC_STACK, sem_taker_thread, NULL, NULL, NULL, SYNC_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
 #endif /* CONFIG_ZVIEW_BENCH_MODE_DYNAMIC */

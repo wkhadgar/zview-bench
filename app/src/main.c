@@ -183,6 +183,34 @@ static void frag_thread(void *p1, void *p2, void *p3)
 K_THREAD_DEFINE(frag_id, FRAG_STACK, frag_thread, NULL, NULL, NULL, WORKER_PRIO, 0,
 		BENCH_START_DELAY_MS);
 
+#define HEAP_WAIT_STACK 512
+#define HEAP_WAIT_SIZE  256
+#define HEAP_WAIT_MS    1500
+#define HEAP_WAIT_HOLD_MS 400
+#define HEAP_WAIT_IDLE_MS 900
+
+/* Asks for a run the checkerboard rarely leaves free, so the request waits. */
+static void heap_waiter_thread(void *p1, void *p2, void *p3)
+{
+	ARG_UNUSED(p1);
+	ARG_UNUSED(p2);
+	ARG_UNUSED(p3);
+
+	while (1) {
+		void *block = k_heap_alloc(&bench_heap, HEAP_WAIT_SIZE, K_MSEC(HEAP_WAIT_MS));
+
+		if (block != NULL) {
+			k_msleep(HEAP_WAIT_HOLD_MS);
+			k_heap_free(&bench_heap, block);
+		}
+
+		k_msleep(HEAP_WAIT_IDLE_MS);
+	}
+}
+
+K_THREAD_DEFINE(heap_waiter_id, HEAP_WAIT_STACK, heap_waiter_thread, NULL, NULL, NULL,
+		WORKER_PRIO, 0, BENCH_START_DELAY_MS);
+
 #define LOAD_PERIOD_MS      100
 
 /* One frame per level. The buffer is read after the call, so it is not reused. */

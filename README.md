@@ -15,16 +15,23 @@ conventions:
 
 ```
 zview-bench/
-  west.yml          # manifest: imports upstream Zephyr (cmsis_6, hal_stm32)
+  west.yml          # manifest: imports upstream Zephyr (cmsis_6, hal_stm32, hal_renesas)
   app/
-    CMakeLists.txt
+    CMakeLists.txt  # picks the sources of the selected mode
     Kconfig
     prj.conf        # ZView observation prerequisites
     VERSION
     sample.yaml
-    src/main.c
+    src/
+      main.c          # arms the instrumentation, then idles
+      bench.h         # thread start delay, led0 edge, period ring
+      instrument.c
+      steady.c        # steady mode: the metronome
+      dynamic/        # dynamic mode, one file per object family
+        heap.c  load.c  mutex.c  sem.c  msgq.c  slab.c  timers.c
+        stack.c       # stack watermark helper shared by the threads
     boards/
-      nucleo_h753zi.overlay   # external probe-point GPIO
+      nucleo_h753zi.overlay   # moves led0 to an external probe point
 ```
 
 ## Getting started

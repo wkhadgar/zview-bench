@@ -6,7 +6,24 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
 project(zview_bench LANGUAGES C)
 
-target_sources(app PRIVATE src/main.c)
+target_include_directories(app PRIVATE src)
+target_sources(app PRIVATE
+  src/main.c
+  src/instrument.c
+)
+
+# Each mode builds only its own workload.
+target_sources_ifdef(CONFIG_ZVIEW_BENCH_MODE_STEADY app PRIVATE src/steady.c)
+target_sources_ifdef(CONFIG_ZVIEW_BENCH_MODE_DYNAMIC app PRIVATE
+  src/dynamic/stack.c
+  src/dynamic/heap.c
+  src/dynamic/load.c
+  src/dynamic/mutex.c
+  src/dynamic/sem.c
+  src/dynamic/msgq.c
+  src/dynamic/slab.c
+  src/dynamic/timers.c
+)
 
 # Locate the git index for this repository and add it as a dependency of the
 # application VERSION file, so a new commit regenerates the version even when

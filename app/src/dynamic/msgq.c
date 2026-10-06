@@ -27,7 +27,7 @@ static void msgq_tx_thread(void *p1, void *p2, void *p3)
 
 	uint32_t seq = 0;
 
-	force_stack_watermark(1);
+	force_stack_watermark(3);
 
 	while (1) {
 		(void)k_msgq_put(&bench_q, &seq, K_FOREVER);
@@ -44,7 +44,7 @@ static void msgq_rx_thread(void *p1, void *p2, void *p3)
 
 	uint32_t msg;
 
-	force_stack_watermark(2);
+	force_stack_watermark(4);
 
 	while (1) {
 		k_msleep(MSGQ_DRAIN_MS);

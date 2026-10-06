@@ -2,8 +2,9 @@
  * Copyright (c) 2026 Paulo Santos (@wkhadgar)
  * SPDX-License-Identifier: Apache-2.0
  *
- * Shared by every workload: the thread start delay and the instrumentation,
- * an optional scope edge on led0 and the ring of measured periods.
+ * Shared by every workload: the thread start delay, the stack watermark
+ * helper and the instrumentation, an optional scope edge on led0 and the ring
+ * of measured periods.
  */
 
 #ifndef ZVIEW_BENCH_BENCH_H_
@@ -30,6 +31,9 @@ extern uint32_t bench_period_cycles[BENCH_RING_LEN];
 extern uint32_t bench_period_head;
 
 void instrument_init(void);
+
+/* Uses depth + 1 frames of 128 bytes and more on the calling thread's stack. */
+void force_stack_watermark(int depth);
 
 static inline void toggle_set(int value)
 {

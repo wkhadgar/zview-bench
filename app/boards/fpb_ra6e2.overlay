@@ -1,0 +1,12 @@
+/*
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * button0 is push button S1 (P304), which the board names sw0.
+ */
+
+/ {
+	aliases {
+		button0 = &button0;
+	};
+};

@@ -5,7 +5,7 @@
 
 #include <string.h>
 
-#include "dynamic.h"
+#include "bench.h"
 
 /* One frame per level. The buffer is read after the call, so it is not reused. */
 void force_stack_watermark(int depth)

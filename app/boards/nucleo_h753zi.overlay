@@ -5,6 +5,8 @@
  * led0 drives an external probe point for a logic analyzer / scope, giving a
  * target-independent reference for the steady-state period. It is moved off
  * the green user LED (LD1) to PB8, Arduino D15 on the Nucleo-144 header.
+ *
+ * button0 is the blue user button (B1), which the board names sw0.
  */
 
 / {
@@ -17,5 +19,6 @@
 
 	aliases {
 		led0 = &bench_toggle;
+		button0 = &user_button;
 	};
 };

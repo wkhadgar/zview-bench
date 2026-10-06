@@ -18,6 +18,4 @@
 #define SYNC_STACK 768
 #define SYNC_PRIO  7
 
-void force_stack_watermark(int depth);
-
 #endif /* ZVIEW_BENCH_DYNAMIC_H_ */

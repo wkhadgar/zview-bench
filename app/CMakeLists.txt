@@ -10,12 +10,12 @@ target_include_directories(app PRIVATE src)
 target_sources(app PRIVATE
   src/main.c
   src/instrument.c
+  src/stack.c
 )
 
 # Each mode builds only its own workload.
 target_sources_ifdef(CONFIG_ZVIEW_BENCH_MODE_STEADY app PRIVATE src/steady.c)
 target_sources_ifdef(CONFIG_ZVIEW_BENCH_MODE_DYNAMIC app PRIVATE
-  src/dynamic/stack.c
   src/dynamic/heap.c
   src/dynamic/load.c
   src/dynamic/mutex.c

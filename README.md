@@ -24,15 +24,16 @@ zview-bench/
     VERSION
     sample.yaml
     src/
-      main.c          # arms the instrumentation, then idles
+      main.c          # arms the instrumentation, then idles; button0 overflows its stack
       bench.h         # thread start delay, led0 edge, period ring
       instrument.c
+      stack.c         # stack watermark helper
       steady.c        # steady mode: the metronome
       dynamic/        # dynamic mode, one file per object family
         heap.c  load.c  mutex.c  sem.c  msgq.c  slab.c  timers.c
-        stack.c       # stack watermark helper shared by the threads
     boards/
-      nucleo_h753zi.overlay   # moves led0 to an external probe point
+      nucleo_h753zi.overlay   # moves led0 to an external probe point, names button0
+      fpb_ra6e2.overlay       # names button0
 ```
 
 ## Getting started

@@ -40,7 +40,7 @@ west flash
 ## Target
 
 Primary board: `nucleo_h753zi` (STM32H753ZI, Cortex-M7). The board overlay
-exposes `bench_toggle` (Arduino D15 / PB8) as an external timing reference.
+points the `led0` alias at Arduino D15 / PB8 as an external timing reference.
 
 ## License
 

@@ -37,11 +37,13 @@ config ZVIEW_BENCH_PERIOD_MS
 config ZVIEW_BENCH_STREAM_WORDS
 	int "Steady-state working-set size (32-bit words)"
 	depends on ZVIEW_BENCH_MODE_STEADY
+	default 4096 if SOC_SERIES_RA6E2
 	default 8192
 	help
 	  Size of the streamed buffer. Keep it larger than the data cache so
 	  each pass forces main-memory traffic; 8192 words is 32 KiB, twice the
-	  Cortex-M7 16 KiB D-cache.
+	  Cortex-M7 16 KiB D-cache. The RA6E2 has 40 KiB of RAM, so it takes
+	  4096 words (16 KiB) to fit.
 
 config ZVIEW_BENCH_STREAM_PASSES
 	int "Steady-state sweeps per period"

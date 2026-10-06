@@ -17,6 +17,7 @@ manifest:
         name-allowlist:
           - cmsis_6   # ARM Cortex-M port
           - hal_stm32 # nucleo_h753zi (STM32H7)
+          - hal_renesas # fpb_ra6e2 (RA6E2)
 
     # ZView itself, so `west zview ...` works from this workspace.
     - name: zview

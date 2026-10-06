@@ -23,10 +23,10 @@
 
 /* Instrumentation */
 
-/* Optional scope edge. A board without the alias builds without it. */
-#if DT_NODE_EXISTS(DT_ALIAS(bench_toggle))
+/* Optional scope edge on led0. A board without the alias builds without it. */
+#if DT_NODE_EXISTS(DT_ALIAS(led0))
 #define HAVE_TOGGLE 1
-static const struct gpio_dt_spec bench_toggle = GPIO_DT_SPEC_GET(DT_ALIAS(bench_toggle), gpios);
+static const struct gpio_dt_spec bench_toggle = GPIO_DT_SPEC_GET(DT_ALIAS(led0), gpios);
 #else
 #define HAVE_TOGGLE 0
 #endif

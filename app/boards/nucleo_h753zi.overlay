@@ -2,9 +2,9 @@
  * Copyright (c) 2026 Paulo Santos (@wkhadgar)
  * SPDX-License-Identifier: Apache-2.0
  *
- * bench_toggle drives an external probe point for a logic analyzer / scope,
- * giving a target-independent reference for the steady-state period. PB8 is
- * Arduino D15 on the Nucleo-144 header.
+ * led0 drives an external probe point for a logic analyzer / scope, giving a
+ * target-independent reference for the steady-state period. It is moved off
+ * the green user LED (LD1) to PB8, Arduino D15 on the Nucleo-144 header.
  */
 
 / {
@@ -16,6 +16,6 @@
 	};
 
 	aliases {
-		bench-toggle = &bench_toggle;
+		led0 = &bench_toggle;
 	};
 };

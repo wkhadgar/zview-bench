@@ -15,6 +15,7 @@ conventions:
 
 ```
 zview-bench/
+  .clang-format     # Zephyr's C style, copied so editors find it
   west.yml          # manifest: imports upstream Zephyr (cmsis_6, hal_stm32, hal_renesas)
   app/
     CMakeLists.txt  # picks the sources of the selected mode

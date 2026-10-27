@@ -11,17 +11,24 @@ manifest:
   projects:
     - name: zephyr
       remote: zephyrproject-rtos
-      revision: main
+      revision: v4.4.2
       import:
         # name-allowlist clones only the modules this app's boards need.
         name-allowlist:
-          - cmsis_6   # ARM Cortex-M port
+          - cmsis_6 # ARM Cortex-M port
           - hal_stm32 # nucleo_h753zi (STM32H7)
           - hal_renesas # fpb_ra6e2 (RA6E2)
+          - hal_rpi_pico # rp2350b (RP2350)
+
+    # The zbook board definition, a Zephyr module with its own board root.
+    - name: zbook
+      remote: wkhadgar
+      revision: 530df5dc6e51823b0eafb1f639ce86da6029fa8f
+      path: modules/boards/zbook
 
     # ZView itself, so `west zview ...` works from this workspace.
     - name: zview
       remote: wkhadgar
-      revision: main
+      revision: v0.26.0
       path: modules/tools/zview
       west-commands: scripts/west-commands.yml

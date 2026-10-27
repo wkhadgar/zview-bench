@@ -16,7 +16,7 @@ conventions:
 ```
 zview-bench/
   .clang-format     # Zephyr's C style, copied so editors find it
-  west.yml          # manifest: imports upstream Zephyr (cmsis_6, hal_stm32, hal_renesas)
+  west.yml          # manifest: Zephyr and its HALs, the zbook board, ZView
   app/
     CMakeLists.txt  # picks the sources of the selected mode
     Kconfig
@@ -34,6 +34,7 @@ zview-bench/
     boards/
       nucleo_h753zi.overlay   # moves led0 to an external probe point, names button0
       fpb_ra6e2.overlay       # names button0
+      zbook_rp2350b_m33.conf  # turns off the board's SD card filesystem
 ```
 
 ## Getting started
@@ -46,10 +47,19 @@ west build -b nucleo_h753zi zview-bench/app
 west flash
 ```
 
-## Target
+## Targets
 
-Primary board: `nucleo_h753zi` (STM32H753ZI, Cortex-M7). The board overlay
-points the `led0` alias at Arduino D15 / PB8 as an external timing reference.
+The primary board is the zbook P1. `led0` carries the scope edge and
+`button0` overflows main's stack; the overlays name them where a board does not.
+
+| Board | Build target | `led0` | `button0` |
+| --- | --- | --- | --- |
+| Nucleo-H753ZI (STM32H753ZI, Cortex-M7) | `nucleo_h753zi` | PB8, Arduino D15 | B1, PC13 |
+| FPB-RA6E2 (RA6E2, Cortex-M33) | `fpb_ra6e2` | LED1, P207 | S1, P304 |
+| zbook P2 (RP2350B, Cortex-M33) | `zbook@p2/rp2350b/m33` | LED0, GPIO24 | BUTTON0, GPIO23 |
+| zbook P1 (RP2350B, Cortex-M33) | `zbook@p1/rp2350b/m33` | blue LED, GPIO0 | BTN_UP, GPIO22 |
+
+The zbook's LEDs are active low, so its scope edge is inverted.
 
 ## License
 

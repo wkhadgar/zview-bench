@@ -101,7 +101,13 @@ set -e
     echo "exit_status: $status"
 } >>"$dir/meta.txt"
 
+# Other ZView processes (test runs included) write to the same log, so keep only this run's window.
 zlog="$HOME/.cache/zview/zview.log"
-if [[ -f "$zlog" ]]; then tail -n 200 "$zlog" >"$dir/zview-log-tail.txt"; fi
+if [[ -f "$zlog" ]]; then
+    from=$(date -d "@$start" +%Y-%m-%dT%H:%M:%S) to=$(date +%Y-%m-%dT%H:%M:%S)
+    awk -v from="$from" -v to="$to" '$1 >= from && $1 <= to' "$zlog" >"$dir/zview-log.txt"
+    echo "zview log: lines from $from to $to of $zlog, shared with other ZView processes" \
+        >>"$dir/meta.txt"
+fi
 echo "exit status $status; fill the TO FILL lines in $dir/meta.txt"
 exit "$status"

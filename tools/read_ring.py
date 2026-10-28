@@ -7,9 +7,14 @@
 Snapshot the steady-mode DWT per-period ring off the target into a CSV.
 
 The metronome records each period's work-window cycle count into the
-``bench_period_cycles`` no-init array (``bench_period_head`` is the next write
-slot). This reads both over a non-halting pyOCD attach, reorders the ring into
-chronological order, drops unwritten slots, and writes one row per period.
+``bench_period_cycles`` no-init array, and the cycles from the start of the
+previous window into ``bench_start_cycles`` (``bench_period_head`` is the next
+write slot of both). This reads them over a non-halting pyOCD attach, reorders
+the ring into chronological order, drops unwritten slots, and writes one row
+per period.
+
+With ``--stop`` it first sets ``bench_stop``, waits for the metronome to see it,
+and only then reads, so the read's bus traffic touches no measured window.
 
 Run it once per condition (ZView detached vs polling); feed the CSVs to the
 distribution comparison.
@@ -18,12 +23,15 @@ distribution comparison.
 import argparse
 import csv
 import sys
+import time
 from pathlib import Path
 
 from elftools.elf.elffile import ELFFile
 
 CYCLES_SYMBOL = "bench_period_cycles"
+START_SYMBOL = "bench_start_cycles"
 HEAD_SYMBOL = "bench_period_head"
+STOP_SYMBOL = "bench_stop"
 
 
 def resolve_symbol(elf_path: str | Path, name: str) -> tuple[int, int]:
@@ -52,12 +60,31 @@ def drop_unwritten(values: list[int]) -> list[int]:
     return [v for v in values if v != 0]
 
 
-def read_ring(target: str, elf_path: str) -> tuple[list[int], int]:
-    """Attach over pyOCD and read the reordered, written ring. Returns (cycles, head)."""
+def pair_rings(windows: list[int], starts: list[int] | None) -> list[tuple[int, int | None]]:
+    """
+    Pair each written window with its start-to-start time, both in ring order.
+
+    Slots are dropped by the window alone, since the first window of a run has
+    no previous start and records a start-to-start of zero. Without the second
+    ring (an older build), every start-to-start is None.
+    """
+    starts = starts if starts is not None else [None] * len(windows)
+    return [(w, s) for w, s in zip(windows, starts, strict=True) if w != 0]
+
+
+def read_ring(
+    target: str, elf_path: str, stop: bool = False, settle_s: float = 0.1
+) -> tuple[list[tuple[int, int | None]], int]:
+    """Attach over pyOCD and read the reordered, written ring. Returns (rows, head)."""
     from pyocd.core.helpers import ConnectHelper
 
     cyc_addr, cyc_size = resolve_symbol(elf_path, CYCLES_SYMBOL)
     head_addr, _ = resolve_symbol(elf_path, HEAD_SYMBOL)
+    try:
+        start_addr, _ = resolve_symbol(elf_path, START_SYMBOL)
+    except LookupError:
+        start_addr = None
+    stop_addr = resolve_symbol(elf_path, STOP_SYMBOL)[0] if stop else None
     count = cyc_size // 4
 
     session = ConnectHelper.session_with_chosen_probe(target_override=target, connect_mode="attach")
@@ -65,10 +92,17 @@ def read_ring(target: str, elf_path: str) -> tuple[list[int], int]:
         raise RuntimeError("no pyOCD probe found")
     with session:
         t = session.target
+        if stop_addr is not None:
+            t.write_memory_block32(stop_addr, [1])
+            # The metronome checks the flag once per period.
+            time.sleep(settle_s)
         head = t.read_memory_block32(head_addr, 1)[0]
-        raw = list(t.read_memory_block32(cyc_addr, count))
+        windows = list(t.read_memory_block32(cyc_addr, count))
+        starts = list(t.read_memory_block32(start_addr, count)) if start_addr is not None else None
 
-    return drop_unwritten(reorder_ring(raw, head)), head
+    windows = reorder_ring(windows, head)
+    starts = reorder_ring(starts, head) if starts is not None else None
+    return pair_rings(windows, starts), head
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -76,17 +110,22 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--elf", required=True, help="The flashed steady-mode ELF.")
     ap.add_argument("--target", default="stm32h753zitx", help="pyOCD target name.")
     ap.add_argument("--freq-hz", type=float, default=480e6, help="Core clock for ns conversion.")
+    ap.add_argument("--stop", action="store_true", help="Set bench_stop before reading.")
+    ap.add_argument(
+        "--settle", type=float, default=0.1, help="Seconds to wait after --stop (default 0.1)."
+    )
     ap.add_argument("-o", "--output", required=True, help="Output CSV path.")
     args = ap.parse_args(argv)
 
-    cycles, head = read_ring(args.target, args.elf)
+    rows, head = read_ring(args.target, args.elf, stop=args.stop, settle_s=args.settle)
     with open(args.output, "w", newline="") as fp:
         w = csv.writer(fp)
-        w.writerow(["index", "cycles", "ns"])
-        for i, c in enumerate(cycles):
-            w.writerow([i, c, round(c / args.freq_hz * 1e9, 1)])
+        w.writerow(["index", "cycles", "ns", "start_cycles", "start_ns"])
+        for i, (c, s) in enumerate(rows):
+            start_ns = "" if s is None else round(s / args.freq_hz * 1e9, 1)
+            w.writerow([i, c, round(c / args.freq_hz * 1e9, 1), "" if s is None else s, start_ns])
 
-    print(f"wrote {len(cycles)} periods to {args.output} (head={head})", file=sys.stderr)
+    print(f"wrote {len(rows)} periods to {args.output} (head={head})", file=sys.stderr)
     return 0
 
 

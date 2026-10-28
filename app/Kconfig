@@ -53,6 +53,17 @@ config ZVIEW_BENCH_STREAM_PASSES
 	  Number of full read-modify-write sweeps over the working set per
 	  period. Sets the deterministic work-window length.
 
+config ZVIEW_BENCH_RUN_MS
+	int "Steady-state run length (ms of uptime, 0 to run until stopped)"
+	depends on ZVIEW_BENCH_MODE_STEADY
+	default 55000
+	help
+	  The metronome stops at this uptime, so the ring holds the last
+	  windows before it and a later read of the ring touches none of them.
+	  The default ends it while a 60 s ZView run started after the reset
+	  still reads. With 0 it runs until the host sets bench_stop through
+	  the probe.
+
 menu "Zephyr"
 source "Kconfig.zephyr"
 endmenu

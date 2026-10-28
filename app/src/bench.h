@@ -3,8 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  *
  * Shared by every workload: the thread start delay, the stack watermark
- * helper and the instrumentation, an optional scope edge on led0 and the ring
- * of measured periods.
+ * helper and the instrumentation, an optional scope edge on led0. Each mode
+ * keeps its own record for the host to read after a run: the steady mode a
+ * ring of measured periods, the dynamic mode a log of mutex holds.
  */
 
 #ifndef ZVIEW_BENCH_BENCH_H_
@@ -25,11 +26,6 @@ extern const struct gpio_dt_spec bench_toggle;
 #define HAVE_TOGGLE 0
 #endif
 
-/* No-init, so a probe reading these never aliases the measured state. */
-#define BENCH_RING_LEN 1024U
-extern uint32_t bench_period_cycles[BENCH_RING_LEN];
-extern uint32_t bench_period_head;
-
 void instrument_init(void);
 
 /* Uses depth + 1 frames of 128 bytes and more on the calling thread's stack. */
@@ -44,12 +40,6 @@ static inline void toggle_set(int value)
 #else
 	ARG_UNUSED(value);
 #endif
-}
-
-static inline void ring_record(uint32_t cycles)
-{
-	bench_period_cycles[bench_period_head] = cycles;
-	bench_period_head = (bench_period_head + 1U) % BENCH_RING_LEN;
 }
 
 #endif /* ZVIEW_BENCH_BENCH_H_ */

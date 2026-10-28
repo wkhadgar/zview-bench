@@ -29,6 +29,6 @@ manifest:
     # ZView itself, so `west zview ...` works from this workspace.
     - name: zview
       remote: wkhadgar
-      revision: v0.26.0
+      revision: v0.26.1
       path: modules/tools/zview
       west-commands: scripts/west-commands.yml

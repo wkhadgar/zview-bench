@@ -67,3 +67,16 @@ def test_resolve_symbol_missing_raises():
         pytest.skip("no flashed ELF available")
     with pytest.raises(LookupError):
         read_ring.resolve_symbol(elf, "no_such_symbol_xyz")
+
+
+def test_pair_rings_keeps_each_window_with_its_start():
+    assert read_ring.pair_rings([100, 0, 120], [0, 0, 500]) == [(100, 0), (120, 500)]
+
+
+def test_pair_rings_without_the_start_ring_gives_none():
+    assert read_ring.pair_rings([100, 120], None) == [(100, None), (120, None)]
+
+
+def test_pair_rings_rejects_rings_of_different_lengths():
+    with pytest.raises(ValueError):
+        read_ring.pair_rings([100, 120], [1])

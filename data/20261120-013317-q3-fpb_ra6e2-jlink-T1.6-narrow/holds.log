@@ -1,0 +1,7 @@
+  #   Probe/Board                                   Unique ID          Target  
+-------------------------------------------------------------------------------
+  [35m0   [32mRaspberry Pi Debugprobe on Pico (CMSIS-DAP)   [36mE661B090E78C9C36   [2m[37mn/a[0m     
+                                                                               
+  [35m1   [32mSegger J-Link-OB-RA4M2                        [36m1080341513         [2m[37mn/a[0m     
+[0m[0m
+Enter the number of the debug probe or 'q' to quit> wrote 424 holds to zview-bench/data/20261120-013317-q3-fpb_ra6e2-jlink-T1.6-narrow/holds.csv (head=424)

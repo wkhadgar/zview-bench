@@ -1,0 +1,61 @@
+  #   Probe/Board                                   Unique ID          Target  
+-------------------------------------------------------------------------------
+  [35m0   [32mRaspberry Pi Debugprobe on Pico (CMSIS-DAP)   [36mE661B090E78C9C36   [2m[37mn/a[0m     
+                                                                               
+  [35m1   [32mSegger J-Link-OB-RA4M2                        [36m1080341513         [2m[37mn/a[0m     
+[0m[0m
+Enter the number of the debug probe or 'q' to quit> Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/probe/pydapaccess/interface/pyusb_v2_backend.py", line 126, in open
+    usb.util.claim_interface(dev, interface_number)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/usb/util.py", line 203, in claim_interface
+    device._ctx.managed_claim_interface(device, interface)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/usb/core.py", line 113, in wrapper
+    return f(self, *args, **kwargs)
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/usb/core.py", line 180, in managed_claim_interface
+    self.backend.claim_interface(self.handle, i)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/usb/backend/libusb1.py", line 833, in claim_interface
+    _check(self.lib.libusb_claim_interface(dev_handle.handle, intf))
+    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/usb/backend/libusb1.py", line 604, in _check
+    raise USBError(_strerror(ret), ret, _libusb_errno[ret])
+usb.core.USBError: [Errno 16] Resource busy
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/probe/cmsis_dap_probe.py", line 278, in open
+    self._link.open()
+    ~~~~~~~~~~~~~~~^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/utility/concurrency.py", line 29, in _locking
+    return func(self, *args, **kwargs)
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/probe/pydapaccess/dap_access_cmsis_dap.py", line 752, in open
+    self._interface.open()
+    ~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/probe/pydapaccess/interface/pyusb_v2_backend.py", line 128, in open
+    raise DAPAccessIntf.DeviceError(f"Unable to claim interface for probe {self.serial_number}") from exc
+pyocd.probe.pydapaccess.dap_access_api.DAPAccessIntf.DeviceError: Unable to claim interface for probe E661B090E78C9C36
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview-bench-ws/zview-bench/tools/read_holds.py", line 85, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "/home/wkhadgar/repos/zview-bench-ws/zview-bench/tools/read_holds.py", line 72, in main
+    holds, head = read_holds(args.target, args.elf)
+                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/zview-bench/tools/read_holds.py", line 56, in read_holds
+    with session:
+         ^^^^^^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/core/session.py", line 485, in __enter__
+    self.open()
+    ~~~~~~~~~^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/core/session.py", line 658, in open
+    self._probe.open()
+    ~~~~~~~~~~~~~~~~^^
+  File "/home/wkhadgar/repos/zview-bench-ws/.venv-zview-bench/lib/python3.14/site-packages/pyocd/probe/cmsis_dap_probe.py", line 317, in open
+    raise self._convert_exception(exc) from exc
+pyocd.core.exceptions.ProbeError: Unable to claim interface for probe E661B090E78C9C36

@@ -1,0 +1,2 @@
+20261119-171129-q2-zbook-pyocd-full-b2b-recheck: frames 1661 of 1954, latency p50 0.1016 p99 0.1110 max 0.1171 s, bytes p50 10919, interval p50 0.1017 s
+20261117-165309-q2-zbook-pyocd-full-b2b: frames 1652 of 1941, latency p50 0.1023 p99 0.1125 max 0.1199 s, bytes p50 10919.0, interval p50 0.1023 s

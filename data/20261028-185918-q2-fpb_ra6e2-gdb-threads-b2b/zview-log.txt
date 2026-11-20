@@ -1,0 +1,2 @@
+2026-10-28T18:59:20 INFO    zview.scraper: Connected to GDB server at localhost:3333
+2026-10-28T19:48:29 ERROR   zview.cli: Command failed: Target lost after 3 retries: Error polling thread usage: GDB error at 0x200013e0: E01

@@ -1,0 +1,15 @@
+Traceback (most recent call last):
+  File "/home/wkhadgar/zview-campaign-c3/q4_shell_compare.py", line 97, in <module>
+    main()
+    ~~~~^^
+  File "/home/wkhadgar/zview-campaign-c3/q4_shell_compare.py", line 55, in main
+    ft = frame_times(f"{D}/rec.ndjson.gz")
+  File "/home/wkhadgar/zview-campaign-c3/q4_shell_compare.py", line 27, in frame_times
+    with gzip.open(path, "rt") as f:
+         ~~~~~~~~~^^^^^^^^^^^^
+  File "/usr/lib/python3.14/gzip.py", line 66, in open
+    binary_file = GzipFile(filename, gz_mode, compresslevel)
+  File "/usr/lib/python3.14/gzip.py", line 211, in __init__
+    fileobj = self.myfileobj = builtins.open(filename, mode or 'rb')
+                               ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'zview-bench/data/20261119-222412-q4-fpb_ra6e2-jlink-shell-check/rec.ndjson.gz'

@@ -1,0 +1,3 @@
+Connected to GDB server at localhost:3333
+Loaded cached ELF @ /home/wkhadgar/.cache/zview/9d5ec0f2a540c804fb8cd54cc671865e.bin
+Recorded 339 frames to rec.ndjson.gz

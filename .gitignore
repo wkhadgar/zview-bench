@@ -10,3 +10,25 @@ __pycache__/
 # build
 /build*
 /twister-out*
+
+# data: of each Kconfig footprint build tree keep only the binary, map, size report and config
+/data/*/footprint-out/b-*/**
+!/data/*/footprint-out/b-*/**/
+!/data/*/footprint-out/b-*/zephyr/zephyr.elf
+!/data/*/footprint-out/b-*/zephyr/zephyr.map
+!/data/*/footprint-out/b-*/zephyr/zephyr.stat
+!/data/*/footprint-out/b-*/zephyr/.config
+
+# data: datasets marked DISCARD in their meta.txt (aborted runs, wrong host power profile)
+/data/20261028-194837-q2-fpb_ra6e2-gdb-full-b2b/
+/data/20261105-144332-q2-zbook-gdb-objects-b2b/
+/data/20261105-145343-q2-zbook-gdb-threads-b2b/
+/data/20261105-151902-q2-zbook-gdb-full-b2b/
+/data/20261105-154739-q2-zbook-gdb-full-0.10s/
+/data/20261105-173911-q3-zbook-pyocd-T3.2/
+/data/20261117-163711-q2-zbook-pyocd-full-0.10s/
+/data/20261117-163941-q2-zbook-pyocd-full-b2b/
+/data/20261117-164219-q2-zbook-pyocd-threads-b2b/
+/data/20261117-164457-q2-zbook-pyocd-objects-b2b/
+/data/20261117-164641-q2-zbook-pyocd-full-0.10s/
+/data/20261119-180245-q3-fpb_ra6e2-jlink-T0.4/

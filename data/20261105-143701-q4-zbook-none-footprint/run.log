@@ -1,0 +1,16 @@
+baseline: FLASH 52828 B, RAM 11400 B, IDT_LIST 0 B
+
+option                                     FLASH        RAM
+CONFIG_INIT_STACKS                           +32         +0
+CONFIG_THREAD_MONITOR                       +120        +96
+CONFIG_THREAD_STACK_INFO                     +16        +48
+CONFIG_THREAD_NAME                          +136       +192
+CONFIG_THREAD_RUNTIME_STATS                 +224       +120
+CONFIG_SYS_HEAP_RUNTIME_STATS                +96         +0
+CONFIG_MEM_SLAB_TRACE_MAX_UTILIZATION        +12         +8
+all required                                +176       +192
+all optional                                +468       +320
+everything                                  +636       +512
+
+Deltas in bytes against the all-off baseline. Singles do not sum to
+the subtotals, because the options share code and struct space.

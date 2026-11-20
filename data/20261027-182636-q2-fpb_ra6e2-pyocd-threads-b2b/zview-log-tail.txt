@@ -1,0 +1,200 @@
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:41:53 ERROR   zview.cli: Command failed: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 453, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 430, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 404, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:44:53 ERROR   zview.cli: Command failed: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 456, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 433, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 407, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:44:53 ERROR   zview.cli: Command failed: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 456, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 433, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 407, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:45:01 WARNING zview.scraper: Broken frame captured (usage counter of the thread at 0x1000 regressed); resyncing baselines.
+2026-10-27T18:45:01 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:45:01 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:45:01 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:45:01 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:46:29 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:46:37 ERROR   zview.cli: Command failed: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 456, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 433, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 407, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:46:37 ERROR   zview.cli: Command failed: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 456, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 433, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 407, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:46:45 WARNING zview.scraper: Broken frame captured (usage counter of the thread at 0x1000 regressed); resyncing baselines.
+2026-10-27T18:46:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:46:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:46:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:46:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:47:37 ERROR   zview.cli: Command failed: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 461, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 438, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 412, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:47:37 ERROR   zview.cli: Command failed: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 461, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 438, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 412, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:47:45 WARNING zview.scraper: Broken frame captured (usage counter of the thread at 0x1000 regressed); resyncing baselines.
+2026-10-27T18:47:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:47:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:47:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:47:45 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:47:47 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:48:17 ERROR   zview.cli: Command failed: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 461, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 438, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 412, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group timer; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:48:17 ERROR   zview.cli: Command failed: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+Traceback (most recent call last):
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 461, in main
+    return dispatch(args)
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 438, in dispatch
+    return _DISPATCH[args.cmd](args)
+           ~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/cli.py", line 412, in _do_dump
+    frame = dump_single_frame(
+        backend,
+    ...<3 lines>...
+        selection=_selection(args),
+    )
+  File "/home/wkhadgar/repos/zview/src/zview/snapshot.py", line 57, in dump_single_frame
+    scraper.check_selection(selection)
+    ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/wkhadgar/repos/zview/src/zview/orchestrator.py", line 174, in check_selection
+    raise ValueError(f"Unknown group {named}; choose from {known}.")
+ValueError: Unknown group thread; choose from threads, heaps, semaphores, mutexes, msgqs, mem_slabs, workqs.
+2026-10-27T18:48:25 WARNING zview.scraper: Broken frame captured (usage counter of the thread at 0x1000 regressed); resyncing baselines.
+2026-10-27T18:48:25 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:48:25 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:48:25 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-27T18:48:25 INFO    zview.scraper: Connected to GDB server at localhost:1234

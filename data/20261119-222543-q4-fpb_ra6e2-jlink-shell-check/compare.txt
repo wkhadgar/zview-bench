@@ -1,0 +1,49 @@
+frames at 57284.93 and 57300.97 s; shell replies at 57285.10 and 57301.21 s (offsets +0.17 and +0.24 s)
+shell threads in the two replies: 18 and 19
+
+CPU share over the same window (percentage points)
+thread                      zview    shell     diff
+idle                        61.18    61.20    -0.02
+load_id                     37.51    37.48    +0.03
+shell_uart                   1.21     1.22    -0.01
+frag_id                      0.06     0.06    -0.00
+heap_waiter_id               0.01     0.01    -0.00
+bench_workq                  0.01     0.01    -0.00
+msgq_tx_id                   0.00     0.00    +0.00
+sem_giver_id                 0.00     0.00    -0.00
+slab_id                      0.00     0.00    +0.00
+lock_owner_id                0.00     0.00    +0.00
+lock_waiter_id               0.00     0.00    +0.00
+main                         0.00     0.00    -0.00
+gate_keeper_id               0.00     0.00    +0.00
+sem_burst_id                 0.00     0.00    -0.00
+msgq_rx_id                   0.00     0.00    +0.00
+timer_id                     0.00     0.00    +0.00
+gate_waiter_b_id             0.00     0.00    +0.00
+sysworkq                     0.00     0.00    +0.00
+largest difference 0.03 pp
+Load % (idle excluded): largest difference 0.03 pp, load_id zview 96.63 shell 96.60
+threads missing from a shell reply: ['gate_waiter_a_id']
+threads only in zview ['gate_waiter_a_id'], only in shell []
+
+Stack usage in bytes
+thread                     size  zview  shell   diff
+bench_workq                 768    208    208     +0
+timer_id                    768    248    248     +0
+slab_id                     768    352    352     +0
+sem_giver_id                768    152    152     +0
+sem_burst_id                768    304    304     +0
+msgq_tx_id                  768    584    584     +0
+msgq_rx_id                  768    720    720     +0
+lock_waiter_id              768    440    440     +0
+lock_owner_id               768    320    320     +0
+load_id                    1024    472    472     +0
+heap_waiter_id              512    248    248     +0
+gate_waiter_b_id            768    168    168     +0
+gate_waiter_a_id            768    168    168     +0
+gate_keeper_id              768    440    440     +0
+frag_id                    1024    728    728     +0
+shell_uart                 2048   1104   1104     +0
+sysworkq                   1024    208    208     +0
+idle                        320     64     64     +0
+main                       1024    280    280     +0

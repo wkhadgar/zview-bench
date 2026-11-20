@@ -1,0 +1,44 @@
+experiment: q1
+board: fpb_ra6e2
+backend: pyocd
+label: boot3
+started: 2026-11-19T15:16:51-03:00
+host: Linux 7.3.4-arch1-2 x86_64 GNU/Linux
+
+zview: v0.28.1
+zview-bench: campaign-3-2-gcdf6383
+zephyr: v4.4.2
+modules/boards/zbook: 530df5d
+modules/hal/renesas: 0628206
+modules/hal/stm32: fc11896d
+modules/hal/rpi_pico: 1.3.0-853-g562b41e1
+west: West version: v1.5.0
+python: Python 3.14.10
+pyocd: 0.45.1
+pylink-square: 1.7.0
+scipy: not found
+statsmodels: not found
+jlink software: libjlinkarm.so.9.94.0
+
+usb probes (lsusb, vendor:product and bcdDevice):
+  Bus 003 Device 005: ID 1366:1024 SEGGER J-Link  bcdDevice=1.00
+
+TO FILL: probe model and firmware:
+TO FILL: board revision and chip revision (H753 REV_ID):
+TO FILL: SWD clock as the tool logged it:
+TO FILL: oscilloscope model, probe, timebase, trigger (Q1 only):
+TO FILL: reset before this session (yes/no):
+TO FILL: notes:
+
+command: west zview record -e /home/wkhadgar/repos/zview-bench-ws/build-ra6e2-steady/zephyr/zephyr.elf -r pyocd -t r7fa6e2bb --frequency 4M --period 0 --duration 60 -o rec.ndjson.gz
+finished: 2026-11-19T15:17:52-03:00
+duration_s: 61
+exit_status: 0
+zview log: lines from 2026-11-19T15:16:51 to 2026-11-19T15:17:52 of /home/wkhadgar/.cache/zview/zview.log, shared with other ZView processes
+
+notes (filled by Claude, 2026-11-19):
+  reset: yes, J-Link reset (JLinkExe r, g) right before the session, log in reset.log
+  probe: Firmware: J-Link OB-RA4M2 compiled May  6 2026 16:18:23
+  host power profile: performance, energy preference performance
+  build: build-ra6e2-steady from bench cdf6383, self-timed stop at 55 s of uptime
+  ring: read_ring.py after the session, log in ring.log

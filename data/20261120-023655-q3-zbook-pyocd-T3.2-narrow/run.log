@@ -1,0 +1,8 @@
+  #   Probe/Board                                   Unique ID          Target  
+-------------------------------------------------------------------------------
+  0   Raspberry Pi Debugprobe on Pico (CMSIS-DAP)   E661B090E78C9C36   n/a     
+                                                                               
+  1   Segger J-Link-OB-RA4M2                        1080341513         n/a     
+
+Enter the number of the debug probe or 'q' to quit> Loaded cached ELF @ /home/wkhadgar/.cache/zview/d48e1440bd23742700ae505fe7fe7d6c.bin
+Recorded 197 frames to rec.ndjson.gz

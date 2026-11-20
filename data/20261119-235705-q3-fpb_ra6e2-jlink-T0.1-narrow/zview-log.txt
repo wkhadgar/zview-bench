@@ -1,0 +1,1 @@
+2026-11-20T00:03:21 WARNING zview.core: Broken frame captured (usage counter of the thread at 0x20000318 regressed); resyncing baselines.

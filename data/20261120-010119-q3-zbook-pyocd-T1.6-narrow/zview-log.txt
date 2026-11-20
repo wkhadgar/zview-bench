@@ -1,0 +1,1 @@
+2026-11-20T01:01:20 ERROR   zview.cli: Command failed: Unable to connect PyOCD to MCU [rp2350]: Unable to claim interface for probe E661B090E78C9C36

@@ -1,0 +1,5 @@
+2026-10-28T12:17:06 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-28T12:17:07 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-28T12:17:08 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-28T12:17:10 INFO    zview.scraper: Connected to GDB server at localhost:1234
+2026-10-28T12:18:39 WARNING zview.scraper: Broken frame captured (usage counter of the thread at 0x20000318 regressed); resyncing baselines.

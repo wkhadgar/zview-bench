@@ -1,0 +1,48 @@
+experiment: q3
+board: zbook
+backend: pyocd
+label: T0.1-narrow
+started: 2026-11-20T01:01:00-03:00
+host: Linux 7.3.4-arch1-2 x86_64 GNU/Linux
+
+zview: v0.28.1
+zview-bench: campaign-3-8-g572ab11
+zephyr: v4.4.2
+modules/boards/zbook: 530df5d
+modules/hal/renesas: 0628206
+modules/hal/stm32: fc11896d
+modules/hal/rpi_pico: 1.3.0-853-g562b41e1
+west: West version: v1.5.0
+python: Python 3.14.10
+pyocd: 0.45.1
+pylink-square: 1.7.0
+scipy: not found
+statsmodels: not found
+jlink software: libjlinkarm.so.9.94.0
+
+usb probes (lsusb, vendor:product and bcdDevice):
+  Bus 003 Device 014: ID 1366:1024 SEGGER J-Link  bcdDevice=1.00
+  Bus 003 Device 016: ID 2e8a:000c Raspberry Pi Debugprobe on Pico (CMSIS-DAP)  bcdDevice=2.23
+
+TO FILL: probe model and firmware:
+TO FILL: board revision and chip revision (H753 REV_ID):
+TO FILL: SWD clock as the tool logged it:
+TO FILL: oscilloscope model, probe, timebase, trigger (Q1 only):
+TO FILL: reset before this session (yes/no):
+TO FILL: notes:
+
+command: west zview record -e /home/wkhadgar/repos/zview-bench-ws/build-zbook-dynamic/zephyr/zephyr.elf -r pyocd -t rp2350 --period 0.1 --duration 630 --match threads:lock_owner_id\,\ mutexes:bench_lock -o rec.ndjson.gz
+finished: 2026-11-20T01:01:01-03:00
+duration_s: 1
+exit_status: 1
+zview log: lines from 2026-11-20T01:01:00 to 2026-11-20T01:01:01 of /home/wkhadgar/.cache/zview/zview.log, shared with other ZView processes
+
+notes (filled by Claude, 2026-11-20):
+  reset: yes, pyocd reset 3 s before the session, log in reset.log
+  build: build-zbook-dynamic from bench cdf6383
+  read: narrow, --match "threads:lock_owner_id, mutexes:bench_lock" (Paulo, 2026-11-19, one Q3 read method for both boards)
+  holds: read_holds.py right after the recording, log in holds.log
+  host power profile: performance
+
+notes (filled by Claude, 2026-11-20):
+  ABORTED: two copies of the zbook sweep started at once (01:00); one held the probe while the other reset the zbook before each failed connect, so this session is unusable. Rerun in a new dataset.

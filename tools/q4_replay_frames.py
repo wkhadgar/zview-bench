@@ -3,42 +3,52 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Replay a ZView recording unpaced and write every frame as JSON lines (dump --json shape).
+"""Replay a ZView recording without pacing and write every frame as one JSON line.
+
+Each line has the shape of `west zview dump --json`, plus `at`, the frame's replay time. The
+ZView source tree is put on the import path, so the replay uses that exact release.
 
 Usage: q4_replay_frames.py ZVIEW_SRC ELF REC OUT.jsonl
 """
-import json, queue, sys
-sys.path.insert(0, sys.argv[1])
-from zview.target import Target
-from zview.selection import Selection
-from zview.frames import Frame, Fatal, Notice, ReplayEnd
-from zview.kinds import KINDS
 
-def to_json(groups):
-    return {k.key: [k.to_json(i) for i in groups[k.key]] for k in KINDS if k.key in groups}
+import json
+import queue
+import sys
+
 
 def main():
-    _, src, elf, rec, out = sys.argv
-    t = Target(elf, recording=rec, is_paced=False)
-    sel = Selection()
-    n = 0
-    with t.open(sel) as core, open(out, "w") as fp:
+    src, elf, rec, out = sys.argv[1:5]
+    sys.path.insert(0, src)
+    from zview.frames import Fatal, Frame, ReplayEnd
+    from zview.kinds import KINDS
+    from zview.selection import Selection
+    from zview.target import Target
+
+    def to_json(groups):
+        return {k.key: [k.to_json(i) for i in groups[k.key]] for k in KINDS if k.key in groups}
+
+    target = Target(elf, recording=rec, is_paced=False)
+    count = 0
+    with target.open(Selection()) as core, open(out, "w") as fp:
         core.start(0)
         try:
             while True:
                 try:
-                    ev = core.events.get(timeout=30)
+                    event = core.events.get(timeout=30)
                 except queue.Empty:
                     break
-                if isinstance(ev, ReplayEnd):
+                if isinstance(event, ReplayEnd):
                     break
-                if isinstance(ev, Fatal):
-                    print("fatal", ev, file=sys.stderr); break
-                if isinstance(ev, Frame):
-                    n += 1
-                    fp.write(json.dumps({"t": getattr(ev, "t", None), **to_json(ev.groups)}) + "\n")
+                if isinstance(event, Fatal):
+                    print("fatal", event, file=sys.stderr)
+                    break
+                if isinstance(event, Frame):
+                    count += 1
+                    fp.write(json.dumps({"at": event.at, **to_json(event.groups)}) + "\n")
         finally:
             core.stop()
-    print(f"{n} frames -> {out}")
+    print(f"{count} frames -> {out}")
 
-main()
+
+if __name__ == "__main__":
+    main()

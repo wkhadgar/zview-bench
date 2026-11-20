@@ -4,17 +4,17 @@
 # SPDX-License-Identifier: Apache-2.0
 """Q4 shell cross-check session, run inside a dataset directory on the shell build.
 
-While ZView records the live target over SWD at a 16 s period (frame 2's CPU shares then cover
-frame 1 to frame 2), the kernel shell is asked `kernel thread list` about once a second over the
-board's serial port, every reply stamped with time.perf_counter(), the clock the recording uses. After the recording, `kernel thread
-stacks` and a ZView dump read the stacks one right after the other. Outputs: rec.ndjson.gz
-(ZView), shell-list.jsonl (one reply per line: host time, text), shell-stacks.txt, dump.json.
-16 s keeps each thread's 32-bit cycle delta below one wrap at 200 MHz (21,5 s).
+While ZView records the target at a 16 s period, the shell is asked `kernel thread list` about
+once a second over the serial port, and each reply is stamped with time.perf_counter(), the clock
+the recording uses. After the recording, `kernel thread stacks` and a ZView dump read the stacks
+one right after the other. A 16 s window keeps each 32-bit cycle delta below one wrap at 200 MHz.
 
-Run through tools/novo-dataset.sh from the west workspace with the bench venv active; the port
-is the board's console UART, such as /dev/serial/by-id/usb-SEGGER_J-Link_<serial>-if00.
+Writes rec.ndjson.gz, shell-list.jsonl (host time and text per reply), shell-stacks.txt and
+dump.json. Run from the west workspace with the bench venv active.
+
 Usage: shell_session.py ELF SERIAL_PORT
 """
+
 import json
 import subprocess
 import sys
@@ -38,7 +38,11 @@ def command(port, cmd, timeout=5.0):
     while time.monotonic() < end:
         buf += port.read(port.in_waiting or 1)
         # The echo carries one prompt; the reply ends at the next.
-        if buf.count(PROMPT) >= 1 and buf.rstrip().endswith(PROMPT.rstrip()) and cmd.encode() in buf:
+        if (
+            buf.count(PROMPT) >= 1
+            and buf.rstrip().endswith(PROMPT.rstrip())
+            and cmd.encode() in buf
+        ):
             break
     return buf.decode(errors="replace")
 
@@ -53,15 +57,19 @@ def main():
         while not stop.is_set():
             t0 = time.perf_counter()
             text = command(port, "kernel thread list")
-            replies.write(json.dumps({"host_start": t0, "host_end": time.perf_counter(), "text": text}) + "\n")
+            replies.write(
+                json.dumps({"host_start": t0, "host_end": time.perf_counter(), "text": text}) + "\n"
+            )
             replies.flush()
             time.sleep(max(0.0, 1.0 - (time.perf_counter() - t0)))
 
     worker = threading.Thread(target=poll)
     worker.start()
     time.sleep(2)
-    subprocess.run(ZV + ["record"] + JL + ["--period", "16", "--duration", "40", "-o", "rec.ndjson.gz"],
-                   check=True)
+    subprocess.run(
+        ZV + ["record"] + JL + ["--period", "16", "--duration", "40", "-o", "rec.ndjson.gz"],
+        check=True,
+    )
     stop.set()
     worker.join()
     replies.close()

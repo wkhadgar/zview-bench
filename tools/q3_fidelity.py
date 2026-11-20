@@ -5,22 +5,18 @@
 
 """Q3 sampling fidelity: detected fraction of the mutex owner's holds against P(d).
 
-Method of chapter 5 (Fidelidade da amostragem):
-- each poll frame gives the owner state of `bench_lock` and the CPU 0 usage stamp
-  (`_kernel` + 0x18, the 32-bit counter at the last runtime-stats update), both from the raw
-  reads in the recording;
-- the hold log (holds.csv, the same counter, 32 bits) gives each hold's start and end;
-- both series are unwrapped from 32 bits; the frame stamps follow the host clock from the last
-  good stamp, and a frame whose stamp is more than 0,5 s off that prediction is dropped and
-  counted (a read of 0 has been seen); every frame where the owner holds the mutex is
-  assigned to the logged hold nearest in time, and a hold is detected with at least one sample;
-- only holds fully inside the recording count, after the 30 s warm-up and more than 1 s from
-  the end;
-- the prediction is P(d) = sum_k min(d, T_k) / sum_k T_k (chapter 4), with T_k the host
-  intervals between frame starts in the same window, and d the median logged hold;
-- the 95% Wilson interval of the detected fraction must contain P(d).
+Each frame gives the owner of `bench_lock` and the CPU 0 usage stamp (`_kernel` + 0x18), and
+holds.csv gives each hold's start and end in the same 32-bit counter. Both series are unwrapped:
+a frame's stamp goes on the wrap the host clock predicts from the last good stamp, and a frame
+more than 0.5 s off that prediction, such as a zero stamp, is dropped. Each frame where the
+owner holds the mutex goes to the nearest logged hold, and a hold is detected with at least one
+such frame. Only holds after the 30 s warm-up and more than 1 s from the end count. The
+prediction is P(d) = sum_k min(d, T_k) / sum_k T_k over the host intervals T_k in that window,
+with d the median hold, and a run passes when the 95% Wilson interval contains it.
 
-Usage: q3_fidelity.py ELF DATASET_DIR [DATASET_DIR ...]
+FREQ_HZ sets the timing counter clock: 150e6 on the zbook, 200e6 on the FPB-RA6E2.
+
+Usage: q3_fidelity.py ELF DATASET_DIR [...]
 """
 
 import os
@@ -33,8 +29,10 @@ import statistics
 import subprocess
 import sys
 
-NM = os.environ.get("NM", os.path.expanduser("~/zephyr-sdk-1.0.1/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-nm"))
-FREQ = float(os.environ.get("FREQ_HZ", "150e6"))  # timing counter clock; FPB: 200e6
+NM = os.environ.get(
+    "NM", os.path.expanduser("~/zephyr-sdk-1.0.1/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-nm")
+)
+FREQ = float(os.environ.get("FREQ_HZ", "150e6"))
 WARMUP_S = 30.0
 EDGE_S = 1.0
 Z = 1.959963984540054
@@ -120,13 +118,18 @@ def analyse(sym, d):
             continue
         j = bisect.bisect_left(starts, s)
         cand = [k for k in (j - 1, j) if 0 <= k < len(starts)]
-        k = min(cand, key=lambda k: 0 if starts[k] <= s <= ends[k] else min(abs(s - starts[k]), abs(s - ends[k])))
+        k = min(
+            cand,
+            key=lambda k: 0
+            if starts[k] <= s <= ends[k]
+            else min(abs(s - starts[k]), abs(s - ends[k])),
+        )
         seen.add(k)
     n = len(counted)
     x = sum(1 for i in counted if i in seen)
 
-    # Host intervals between frame starts inside the counted window (target and host time agree
-    # on pyOCD and J-Link, which do not halt the core).
+    # Host intervals between frame starts in the counted window; host and target time agree
+    # because these backends do not halt the core.
     sel = [h for h, s in zip(host, stamp) if t0 <= s <= t1]
     tk = [b - a for a, b in zip(sel, sel[1:])]
     dur = statistics.median((ends[i] - starts[i]) / FREQ for i in counted)

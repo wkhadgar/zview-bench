@@ -4,16 +4,14 @@
 # SPDX-License-Identifier: Apache-2.0
 """Q4 shell cross-check: ZView's readings against the kernel shell's own statistics.
 
-Stacks: for each thread, ZView's watermark (dump.json, bytes used) against the shell's
-`kernel thread stacks` usage (shell-stacks.txt), read one right after the other.
-CPU: ZView's frame-2 shares of rec.ndjson.gz (replayed with `west zview dump --frame 2 --json`)
-against the shares from the shell's `kernel thread list` cycle deltas between the two replies
-nearest the recording's frames 1 and 2 (same perf_counter clock). The shell prints cycles as
-32-bit values, so deltas are taken modulo 2**32 (the 16 s window stays below one wrap).
+Stacks: ZView's watermark (dump.json) against the bytes used that `kernel thread stacks` reports.
+CPU: ZView's shares in frame 2 of the recording against the shares from the shell's cycle deltas
+between the two replies nearest frames 1 and 2. The shell prints 32-bit cycle counts, so deltas
+are taken modulo 2**32. Calls `west zview dump`, so run it from the west workspace.
 
-Run from the west workspace with the bench venv active (it calls `west zview dump`).
 Usage: q4_shell_compare.py ELF DATASET_DIR
 """
+
 import gzip
 import json
 import re
@@ -57,23 +55,43 @@ def shell_threads(text):
 
 def main():
     ft = frame_times(f"{D}/rec.ndjson.gz")
-    replies = [json.loads(l) for l in open(f"{D}/shell-list.jsonl")]
-    mid = lambda r: (r["host_start"] + r["host_end"]) / 2
-    # A reply can come back cut short over the serial port; the nearest replies are kept anyway
-    # (alignment matters more), and a thread missing from either is listed below.
+    replies = [json.loads(line) for line in open(f"{D}/shell-list.jsonl")]
+
+    def mid(r):
+        return (r["host_start"] + r["host_end"]) / 2
+
+    # A reply can come back cut short; the nearest ones are kept, and missing threads are listed.
     r1 = min(replies, key=lambda r: abs(mid(r) - ft[0]))
     r2 = min(replies, key=lambda r: abs(mid(r) - ft[1]))
     c1, c2 = shell_threads(r1["text"]), shell_threads(r2["text"])
     delta = {n: (c2[n] - c1[n]) % WRAP for n in c2 if n in c1}
     total = sum(delta.values())
     shell_share = {n: 100.0 * v / total for n, v in delta.items()}
-    print(f"frames at {ft[0]:.2f} and {ft[1]:.2f} s; shell replies at {mid(r1):.2f} and {mid(r2):.2f} s "
-          f"(offsets {mid(r1) - ft[0]:+.2f} and {mid(r2) - ft[1]:+.2f} s)")
+    print(
+        f"frames at {ft[0]:.2f} and {ft[1]:.2f} s; shell replies at {mid(r1):.2f} and {mid(r2):.2f} s "
+        f"(offsets {mid(r1) - ft[0]:+.2f} and {mid(r2) - ft[1]:+.2f} s)"
+    )
 
-    dump = json.loads(subprocess.run(["west", "zview", "dump", "-e", ELF, "-i", f"{D}/rec.ndjson.gz",
-                                      "--frame", "2", "--json"], check=True, capture_output=True,
-                                     text=True).stdout)
-    # cpu_normalized is the CPU % column (p_i, idle included); cpu is Load % (q_i, idle excluded).
+    dump = json.loads(
+        subprocess.run(
+            [
+                "west",
+                "zview",
+                "dump",
+                "-e",
+                ELF,
+                "-i",
+                f"{D}/rec.ndjson.gz",
+                "--frame",
+                "2",
+                "--json",
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout
+    )
+    # cpu_normalized is the CPU % column (idle included); cpu is Load % (idle excluded).
     zv = {t["name"]: t["runtime"]["cpu_normalized"] for t in dump["threads"] if t.get("runtime")}
     zl = {t["name"]: t["runtime"]["cpu"] for t in dump["threads"] if t.get("runtime")}
     busy = total - delta.get("idle", 0)
@@ -88,14 +106,23 @@ def main():
         print(f"{n:24s} {zv[n]:8.2f} {shell_share[n]:8.2f} {d:+8.2f}")
     print(f"largest difference {worst:.2f} pp")
     lw = max(abs(zl[n] - shell_load[n]) for n in set(zl) & set(shell_load))
-    print(f"Load % (idle excluded): largest difference {lw:.2f} pp, load_id zview {zl.get('load_id', 0):.2f} shell {shell_load.get('load_id', 0):.2f}")
-    print(f"threads missing from a shell reply: {sorted((set(c1) | set(c2)) - (set(c1) & set(c2)))}")
-    print(f"threads only in zview {sorted(set(zv) - set(shell_share))}, "
-          f"only in shell {sorted(set(shell_share) - set(zv))}")
+    print(
+        f"Load % (idle excluded): largest difference {lw:.2f} pp, load_id zview {zl.get('load_id', 0):.2f} shell {shell_load.get('load_id', 0):.2f}"
+    )
+    print(
+        f"threads missing from a shell reply: {sorted((set(c1) | set(c2)) - (set(c1) & set(c2)))}"
+    )
+    print(
+        f"threads only in zview {sorted(set(zv) - set(shell_share))}, "
+        f"only in shell {sorted(set(shell_share) - set(zv))}"
+    )
 
     stacks = {}
     for line in open(f"{D}/shell-stacks.txt"):
-        m = re.match(r"\s*0x[0-9a-f]+\s+(\S+)\s+\(real size\s+(\d+)\):\s+unused\s+(\d+)\s+usage\s+(\d+)", line)
+        m = re.match(
+            r"\s*0x[0-9a-f]+\s+(\S+)\s+\(real size\s+(\d+)\):\s+unused\s+(\d+)\s+usage\s+(\d+)",
+            line,
+        )
         if m:
             stacks[m.group(1)] = (int(m.group(2)), int(m.group(4)))
     snap = json.load(open(f"{D}/dump.json"))

@@ -3,21 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Q3 sampling fidelity: detected fraction of the mutex owner's holds against P(d).
-
-Each frame gives the owner of `bench_lock` and the CPU 0 usage stamp (`_kernel` + 0x18), and
-holds.csv gives each hold's start and end in the same 32-bit counter. Both series are unwrapped:
-a frame's stamp goes on the wrap the host clock predicts from the last good stamp, and a frame
-more than 0.5 s off that prediction, such as a zero stamp, is dropped. Each frame where the
-owner holds the mutex goes to the nearest logged hold, and a hold is detected with at least one
-such frame. Only holds after the 30 s warm-up and more than 1 s from the end count. The
-prediction is P(d) = sum_k min(d, T_k) / sum_k T_k over the host intervals T_k in that window,
-with d the median hold, and a run passes when the 95% Wilson interval contains it.
-
-FREQ_HZ sets the timing counter clock: 150e6 on the zbook, 200e6 on the FPB-RA6E2.
-
-Usage: q3_fidelity.py ELF DATASET_DIR [...]
-"""
+"""Q3 detected hold fraction against P(d), Wilson 95%. Usage: q3_fidelity.py ELF DATASET..."""
 
 import os
 import bisect
@@ -32,6 +18,7 @@ import sys
 NM = os.environ.get(
     "NM", os.path.expanduser("~/zephyr-sdk-1.0.1/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-nm")
 )
+# Timing counter clock: 150e6 on the zbook, 200e6 on the FPB-RA6E2.
 FREQ = float(os.environ.get("FREQ_HZ", "150e6"))
 WARMUP_S = 30.0
 EDGE_S = 1.0

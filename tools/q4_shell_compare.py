@@ -2,15 +2,7 @@
 # Copyright (c) 2026 Paulo Santos (@wkhadgar)
 #
 # SPDX-License-Identifier: Apache-2.0
-"""Q4 shell cross-check: ZView's readings against the kernel shell's own statistics.
-
-Stacks: ZView's watermark (dump.json) against the bytes used that `kernel thread stacks` reports.
-CPU: ZView's shares in frame 2 of the recording against the shares from the shell's cycle deltas
-between the two replies nearest frames 1 and 2. The shell prints 32-bit cycle counts, so deltas
-are taken modulo 2**32. Calls `west zview dump`, so run it from the west workspace.
-
-Usage: q4_shell_compare.py ELF DATASET_DIR
-"""
+"""Q4 ZView readings against the kernel shell. Usage: q4_shell_compare.py ELF DATASET"""
 
 import gzip
 import json

@@ -3,13 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Replay a ZView recording without pacing and write every frame as one JSON line.
-
-Each line has the shape of `west zview dump --json`, plus `at`, the frame's replay time. The
-ZView source tree is put on the import path, so the replay uses that exact release.
-
-Usage: q4_replay_frames.py ZVIEW_SRC ELF REC OUT.jsonl
-"""
+"""Replay a recording unpaced into JSON lines. Usage: q4_replay_frames.py SRC ELF REC OUT"""
 
 import json
 import queue

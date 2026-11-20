@@ -3,16 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Q1 clock ratio: how far the target's time advanced against the host's during a recording.
-
-The CPU 0 usage stamp (`_kernel` + 0x18) holds the timing counter at the last runtime-stats
-update, and that counter stops while the core is halted. The ratio is the stamp's advance, in
-seconds, over the host time between the same two frames, from 30 to 50 s of the session. Stamps
-are unwrapped from 32 bits, and a zero stamp, read between a switch-out and the next switch-in,
-is skipped.
-
-Usage: q1_clock.py ELF FREQ_HZ DATASET_DIR [...]
-"""
+"""Q1 target-to-host clock ratio per recording. Usage: q1_clock.py ELF FREQ_HZ DATASET..."""
 
 import os
 import gzip

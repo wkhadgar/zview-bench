@@ -3,21 +3,13 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Stack bound per thread: puncover's static worst case plus what it cannot see.
-
-puncover counts a recursive function once and does not follow calls through function pointers.
-The bound adds the z_thread_entry frame, the bench's known recursion (depth + 1 frames of
-force_stack_watermark) and the Armv8-M exception frame (32 B, or 104 B with FP context), and is
-compared with ZView's watermark.
-
-THREADS_TXT has one line per thread: name, entry symbol, stack size and ZView's watermark.
-
-Usage: stack_bound.py PUNCOVER_JSON THREADS_TXT
-"""
+"""Static stack bound per thread. Usage: stack_bound.py PUNCOVER_JSON THREADS_TXT"""
 
 import json
 import sys
 
+# puncover counts recursion once and skips function pointers, so the bound adds the known
+# recursion and the Armv8-M exception frame (32 B, 104 B with FP context).
 # force_stack_watermark(depth) call of each thread entry in app/src/dynamic.
 DEPTH = {
     "lock_owner_thread": 1,

@@ -3,13 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Q2 read cost per recording, after the 30 s warm-up.
-
-A frame is one begin_batch..end_batch pair with at least one read. Prints the frames kept, the
-latency p50, p99 and max, the bytes per frame and the host interval between frame starts.
-
-Usage: q2_stats.py DATASET_DIR [...]
-"""
+"""Q2 read cost per recording after the warm-up. Usage: q2_stats.py DATASET..."""
 
 import gzip
 import json

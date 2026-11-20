@@ -3,14 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Q4 accuracy: compare replayed frames with what the dynamic workloads define.
-
-Reads the output of q4_replay_frames.py, skips the 30 s warm-up and reports the bench_q capacity,
-the bench_slab geometry and peak, the bench_slots limit, and, for each duty of load_id (10, 35 and
-70%), the median of its per-frame CPU share among the frames within 3 points of that duty.
-
-Usage: q4_workload.py FRAMES.jsonl PERIOD_S
-"""
+"""Q4 accuracy of replayed frames. Usage: q4_workload.py FRAMES.jsonl PERIOD_S"""
 
 import json
 import statistics

@@ -3,16 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-"""Q1 perturbation statistics for one board, from the ring snapshots.
-
-For each boot, the median work window and the median start-to-start period. For each condition,
-the median of its boot medians and its shift against the detached condition, the exact two-sided
-Mann-Whitney U on the boot medians with Holm's correction at 0.05, and Cliff's delta over all
-windows (positive means longer windows with ZView). A condition passes when both shifts stay
-under 1%.
-
-Usage: q1_stats.py DATA_DIR BOARD
-"""
+"""Q1 boot medians, Mann-Whitney with Holm and Cliff's delta. Usage: q1_stats.py DIR BOARD"""
 
 import csv
 import glob

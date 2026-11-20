@@ -2,18 +2,7 @@
 # Copyright (c) 2026 Paulo Santos (@wkhadgar)
 #
 # SPDX-License-Identifier: Apache-2.0
-"""Q4 shell cross-check session, run inside a dataset directory on the shell build.
-
-While ZView records the target at a 16 s period, the shell is asked `kernel thread list` about
-once a second over the serial port, and each reply is stamped with time.perf_counter(), the clock
-the recording uses. After the recording, `kernel thread stacks` and a ZView dump read the stacks
-one right after the other. A 16 s window keeps each 32-bit cycle delta below one wrap at 200 MHz.
-
-Writes rec.ndjson.gz, shell-list.jsonl (host time and text per reply), shell-stacks.txt and
-dump.json. Run from the west workspace with the bench venv active.
-
-Usage: shell_session.py ELF SERIAL_PORT
-"""
+"""Q4 shell cross-check session on the shell build. Usage: shell_session.py ELF PORT"""
 
 import json
 import subprocess

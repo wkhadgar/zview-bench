@@ -1,0 +1,97 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: modules-deps
+DocumentNamespace: http://spdx.org/spdxdocs/zephyr-5f835865-611b-45e1-b76f-76175ac47152/modules-deps
+Creator: Tool: Zephyr SPDX builder
+Created: 2026-11-23T13:29:33Z
+
+Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-zephyr-deps
+Relationship: SPDXRef-zbook-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+Relationship: SPDXRef-zview-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+Relationship: SPDXRef-cmsis-6-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+Relationship: SPDXRef-hal-renesas-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+Relationship: SPDXRef-hal-rpi-pico-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+Relationship: SPDXRef-hal-stm32-deps DEPENDENCY_OF SPDXRef-zephyr-deps
+
+##### Package: zephyr
+
+PackageName: zephyr
+SPDXID: SPDXRef-zephyr-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: git+https://github.com/zephyrproject-rtos/zephyr@dccb09599635bdff17633fa7e9dab014b91dce90
+PackageVersion: 4.4.2
+PackageSupplier: Organization: zephyrproject
+ExternalRef: PACKAGE-MANAGER purl pkg:github/zephyrproject-rtos/zephyr@v4.4.2
+ExternalRef: SECURITY cpe23Type cpe:2.3:o:zephyrproject:zephyr:4.4.2:-:*:*:*:*:*:*
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: zbook-deps
+
+PackageName: zbook-deps
+SPDXID: SPDXRef-zbook-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: zview-deps
+
+PackageName: zview-deps
+SPDXID: SPDXRef-zview-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: cmsis-6-deps
+
+PackageName: cmsis_6-deps
+SPDXID: SPDXRef-cmsis-6-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: hal-renesas-deps
+
+PackageName: hal_renesas-deps
+SPDXID: SPDXRef-hal-renesas-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: hal-rpi-pico-deps
+
+PackageName: hal_rpi_pico-deps
+SPDXID: SPDXRef-hal-rpi-pico-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+
+##### Package: hal-stm32-deps
+
+PackageName: hal_stm32-deps
+SPDXID: SPDXRef-hal-stm32-deps
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageDownloadLocation: NOASSERTION
+FilesAnalyzed: false
+PackageComment: Utility target; no files
+

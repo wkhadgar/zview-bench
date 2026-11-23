@@ -1,0 +1,123 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: app-sources
+DocumentNamespace: http://spdx.org/spdxdocs/zephyr-7c51ef6d-09ae-4177-a263-2d253fff67f5/app
+Creator: Tool: Zephyr SPDX builder
+Created: 2026-11-23T13:28:39Z
+
+Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-app-sources
+
+##### Package: app-sources
+
+PackageName: app-sources
+SPDXID: SPDXRef-app-sources
+PackageLicenseConcluded: Apache-2.0
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PrimaryPackagePurpose: SOURCE
+PackageDownloadLocation: NOASSERTION
+PackageLicenseInfoFromFiles: Apache-2.0
+FilesAnalyzed: true
+PackageVerificationCode: 99b3f9fe0cedd7cac15048fcfb952f4c754b60bf
+
+FileName: ./src/dynamic/heap.c
+SPDXID: SPDXRef-File-heap.c
+FileChecksum: SHA1: 88e622cbf41a6f6a1097ea8e81500383cba3fc99
+FileChecksum: SHA256: ad09c768a012e347deee6ccef2df3ca0788f54184314277713aaf89a88482be5
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/load.c
+SPDXID: SPDXRef-File-load.c
+FileChecksum: SHA1: 251e1eaa0912fce32aa8eccad76b6c61af138177
+FileChecksum: SHA256: 02e9b13b01c182a6033461f8432449addfcaafe710fcd02fe7ee00fdebbcdaa7
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/msgq.c
+SPDXID: SPDXRef-File-msgq.c
+FileChecksum: SHA1: 2f7dfc7fa024c560b0dca006c90d3d75716c17fd
+FileChecksum: SHA256: 9079950e2f820a843b9fad586e4229574af6c6318b168a24754f83ba9bacd674
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/mutex.c
+SPDXID: SPDXRef-File-mutex.c
+FileChecksum: SHA1: 49eab61caa6373d2413aca83f1599ba8c2c87a5b
+FileChecksum: SHA256: 5380a923bf9ca755eae210a01c90e5939e1cc1f6469bab9e1e21128df272920b
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/sem.c
+SPDXID: SPDXRef-File-sem.c
+FileChecksum: SHA1: b0b1a986aad892c305f01decd587248cb8fb4ba6
+FileChecksum: SHA256: 1ef8075950c7459e1972eddb589cf9d43a74c7fd486235f0dcc4fb187a77b124
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/slab.c
+SPDXID: SPDXRef-File-slab.c
+FileChecksum: SHA1: cd27495d6ac8e3dfcd28ba1d3ed299db8b7b0fe3
+FileChecksum: SHA256: fe79a7e60008ebf42c882004195449b2e02de2ca62e98a00e4cfe63c4eb5d3da
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/dynamic/timers.c
+SPDXID: SPDXRef-File-timers.c
+FileChecksum: SHA1: 095b0e3bd5008b32a0482a1b45b133e96647a26d
+FileChecksum: SHA256: 65a936c95ce6c60c43abe7e224e22637616a69956b5f11108b84900f5b864384
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/instrument.c
+SPDXID: SPDXRef-File-instrument.c
+FileChecksum: SHA1: 60d330ef5d6600f85be7ac14e67c15e0ec557e2d
+FileChecksum: SHA256: 3381d38893d752ad0ccce7039be486acaa1fa93cd3aad6c7d927319ecba4ccd0
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/main.c
+SPDXID: SPDXRef-File-main.c
+FileChecksum: SHA1: fa0073fa4a8322699ecacd227a1bec27f55afc1f
+FileChecksum: SHA256: 87248bd44ed1c7b6c68de6cf9d3284d5696fd5488cec2202b7b671f65864e571
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
+FileName: ./src/stack.c
+SPDXID: SPDXRef-File-stack.c
+FileChecksum: SHA1: 177a979c9b1325e2d579ecca3747b6ffd36c8af6
+FileChecksum: SHA256: 3dca3bc3df10d0bca5f79bbfbd8696453f9d9d3d26ec74c3ea10b438d5093af0
+LicenseConcluded: Apache-2.0
+LicenseInfoInFile: Apache-2.0
+FileCopyrightText: <text>
+ * Copyright (c) 2026 Paulo Santos (@wkhadgar)
+</text>
+
